@@ -39,6 +39,40 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
+OTHER_APPS = [
+    'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
+]
+
+FUNCIONARIOS_APPS = [
+    'apps.api',
+    'apps.core',
+    'apps.funcionario',
+]
+
+INSTALLED_APPS = INSTALLED_APPS + OTHER_APPS + FUNCIONARIOS_APPS
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8000',
+    'localhost:8080',
+    'localhost:9000',
+    '127.0.0.1:8000',
+    '127.0.0.1:8080',
+    '127.0.0.1:9000',
+    'fundrhi.aguasdorio.org.br'
+)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
