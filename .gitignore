@@ -1,0 +1,7 @@
+.DS_Store
+
+db.sqlite3
+.virtualenv
+.vscode/
+import os
+fundrhi/local_settings.py
