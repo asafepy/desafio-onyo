@@ -3,6 +3,7 @@ from rest_framework import routers, serializers, viewsets
 from apps.core.views import (LoginAuthToken, 
                              ObtainAuthToken, 
                              UserCreateViewSet)
+from apps.cep import views
 
 router = routers.DefaultRouter()
 
@@ -18,6 +19,8 @@ helper_patterns = [
     path('authenticate/', 
          LoginAuthToken.as_view(), 
          name='authenticate'),
+
+    path('ws/<int:cep>/', views.get_cep, name='get-cep')
 ]
 
 urlpatterns = [
