@@ -3,8 +3,10 @@ from rest_framework import routers, serializers, viewsets
 from apps.core.views import (LoginAuthToken, 
                              ObtainAuthToken, 
                              UserCreateViewSet)
-
+from apps.funcionario.views import EmployeeViewSet
 router = routers.DefaultRouter()
+
+router.register(r'funcionarios', EmployeeViewSet, basename='funcionarios')
 
 # router.register(r'sensors', views.SensorViewSet)
 # router.register(r'equipments', views.EquipamentViewSet)

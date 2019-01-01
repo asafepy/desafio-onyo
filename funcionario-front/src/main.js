@@ -7,7 +7,7 @@ import VueAxios from 'vue-axios'
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://api.fundrhi.pythonlab.com.br/api';
+axios.defaults.baseURL = 'http://localhost:9000/api';
 Vue.use(VueAxios, axios)
 
 new Vue({
