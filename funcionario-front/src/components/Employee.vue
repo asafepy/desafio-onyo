@@ -57,6 +57,7 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
+        <td class="text-xs-left">{{ props.item.id }}</td>
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.surname }}</td>
         <td class="text-xs-left">{{ props.item.role }}</td>
@@ -93,7 +94,8 @@
     data: () => ({
       dialog: false,
       headers: [
-        { text: 'Nome', value: 'calories' },
+        { text: 'id', value: 'id' },
+        { text: 'Nome', value: 'name' },
         { text: 'Sobrenome', value: 'surname' },
         { text: 'Cargo', value: 'role' },
         { text: 'CEP', value: 'cep' },
@@ -106,6 +108,7 @@
       employeeItems: [],
       editedIndex: -1,
       editedItem: {
+        id: 0,
         name: '',
         surname: '',
         role: '',
@@ -118,6 +121,7 @@
 
       },
       defaultItem: {
+        id: 0,
         name: '',
         surname: '',
         role: '',
@@ -166,7 +170,9 @@
           this.editedItem.address.uf = response.data.uf
         })
         .catch(error => {
-          console.log(error)
+          console.log(error.response.data['message'])
+          alert(error.response.data['message'])
+
         })
       },
 
@@ -177,8 +183,20 @@
       },
 
       deleteItem (item) {
+        
         const index = this.employeeItems.indexOf(item)
         confirm('Are you sure you want to delete this item?') && this.employeeItems.splice(index, 1)
+
+        console.log(item.id)
+
+        this.axios.delete(`/funcionario/${item.id}/`)
+        .then(response => {
+          
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        
       },
 
       close () {

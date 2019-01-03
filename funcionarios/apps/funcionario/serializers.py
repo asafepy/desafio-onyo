@@ -14,7 +14,7 @@ class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Employee
-        fields = ('url', 'name', 'surname', 'role', 'address')
+        fields = ('url', 'id', 'name', 'surname', 'role', 'address')
 
     def create(self, validated_data):
         address_data = validated_data.pop('address')

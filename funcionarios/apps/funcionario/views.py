@@ -13,4 +13,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
 def search_cep(request, cep):
     address = requests.get(settings.BASE_URL.format(cep))
-    return JsonResponse(address.json())
+    print(address.status_code)
+    if address.status_code == 200:
+        return JsonResponse(address.json())
+
+    return JsonResponse({'message':'CEP não localizado!'}, status=404)
