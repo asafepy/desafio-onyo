@@ -54,28 +54,13 @@ FUNCIONARIOS_APPS = [
 
 INSTALLED_APPS = INSTALLED_APPS + OTHER_APPS + FUNCIONARIOS_APPS
 
-CORS_ALLOW_METHODS = (
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-)
-
-CORS_ORIGIN_WHITELIST = (
-    'localhost:8000',
-    'localhost:8080',
-    'localhost:9000',
-    '127.0.0.1:8000',
-    '127.0.0.1:8080',
-    '127.0.0.1:9000',
-    'fundrhi.aguasdorio.org.br'
-)
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -152,3 +137,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+BASE_URL = 'http://127.0.0.1:5000/ws/{}/'

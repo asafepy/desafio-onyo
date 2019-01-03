@@ -1,18 +1,16 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from apps.funcionario.models.funcionario import Employee
-from apps.funcionario.models.endereco import Address
+import requests
+from django.conf import settings
+from django.http import JsonResponse
 from rest_framework import viewsets
-from .serializers import EmployeeSerializer, AddressSerializer
+from .serializers import EmployeeSerializer
+from .models.funcionario import Employee
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-
     serializer_class = EmployeeSerializer
     queryset = Employee.objects.all()
 
 
-class AddressViewSet(viewsets.ModelViewSet):
-
-    serializer_class = AddressSerializer
-    queryset = Address.objects.all()
+def search_cep(request, cep):
+    address = requests.get(settings.BASE_URL.format(cep))
+    return JsonResponse(address.json())

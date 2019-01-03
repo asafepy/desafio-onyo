@@ -8,7 +8,7 @@ from microservice_cep.core.views import BuscaCep
 app = Flask(__name__)
 api = Api(app)
 
-api.add_resource(BuscaCep, '/ws/<string:cep>')
+api.add_resource(BuscaCep, '/ws/<string:cep>/')
 
 if __name__ == '__main__':
     app.run(debug=True)

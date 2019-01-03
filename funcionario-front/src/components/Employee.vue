@@ -28,16 +28,16 @@
                   <v-text-field v-model="editedItem.role" label="Cargo"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.cep" label="CEP"></v-text-field>
+                  <v-text-field v-model="editedItem.address.cep" @blur="get_cep(editedItem.address.cep)" label="CEP"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.bairro" label="Bairro"></v-text-field>
+                  <v-text-field v-model="editedItem.address.bairro" label="Bairro"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.localidade" label="Localidade"></v-text-field>
+                  <v-text-field v-model="editedItem.address.localidade" label="Localidade"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.uf" label="UF"></v-text-field>
+                  <v-text-field v-model="editedItem.address.uf" label="UF"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -53,31 +53,30 @@
     </v-toolbar>
     <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="employeeItems"
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.surname }}</td>
-        <td class="text-xs-right">{{ props.item.role }}</td>
-        <td class="text-xs-right">{{ props.item.cep }}</td>
-        <td class="text-xs-right">{{ props.item.bairro }}</td>
-        <td class="text-xs-right">{{ props.item.localidade }}</td>
-        <td class="text-xs-right">{{ props.item.uf }}</td>
+        <td class="text-xs-left">{{ props.item.name }}</td>
+        <td class="text-xs-left">{{ props.item.surname }}</td>
+        <td class="text-xs-left">{{ props.item.role }}</td>
+        <td class="text-xs-left">{{ props.item.address.cep }}</td>
+        <td class="text-xs-left">{{ props.item.address.bairro }}</td>
+        <td class="text-xs-left">{{ props.item.address.localidade }}</td>
+        <td class="text-xs-left">{{ props.item.address.uf }}</td>
         <td class="justify-center layout px-0">
           <v-icon
             small
             class="mr-2"
             @click="editItem(props.item)"
           >
-            editar
+            edit
           </v-icon>
           <v-icon
             small
             @click="deleteItem(props.item)"
           >
-            deletar
+            delete
           </v-icon>
         </td>
       </template>
@@ -100,28 +99,34 @@
         { text: 'CEP', value: 'cep' },
         { text: 'Bairro', value: 'bairro'},
         { text: 'Localidade', value: 'localidade'},
-        { text: 'UF', value: 'uf'}
+        { text: 'UF', value: 'uf'},
+        { text: 'Ações', value: 'name', sortable: false }
+
       ],
-      Employee: [],
+      employeeItems: [],
       editedIndex: -1,
       editedItem: {
         name: '',
         surname: '',
         role: '',
-        cep: '',
-        bairro: '',
-        localidade: '',
-        uf: '',
+        address:{
+          cep: '',
+          bairro: '',
+          localidade: '',
+          uf: '',
+        }
 
       },
       defaultItem: {
         name: '',
         surname: '',
         role: '',
-        cep: '',
-        bairro: '',
-        localidade: '',
-        uf: '',
+        address:{
+          cep: '',
+          bairro: '',
+          localidade: '',
+          uf: '',
+        }
       }
     }),
 
@@ -145,22 +150,35 @@
       initialize () {
         this.axios.get('/funcionario/')
           .then(response => {
-            this.Employee = response.data['results']
+            this.employeeItems = response.data
           })
           .catch(error => {
             console.log(error)
           })
       },
 
+      get_cep() {
+        
+        this.axios.get(`/cep/${this.editedItem.address.cep}/`)
+        .then(response => { 
+          this.editedItem.address.bairro = response.data.bairro
+          this.editedItem.address.localidade = response.data.localidade
+          this.editedItem.address.uf = response.data.uf
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      },
+
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.employeeItems.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        const index = this.desserts.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+        const index = this.employeeItems.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.employeeItems.splice(index, 1)
       },
 
       close () {
@@ -173,9 +191,45 @@
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+  
+          this.axios.put('/funcionario/', {
+            name: this.editedItem.name,
+            surname: this.editedItem.surname,
+            role: this.editedItem.role,
+            address:{
+              cep: this.editedItem.address.cep,
+              bairro: this.editedItem.address.bairro,
+              localidade: this.editedItem.address.localidade,
+              uf: this.editedItem.address.uf
+            }
+          })
+          .then(response => { 
+            Object.assign(this.employeeItems[this.editedIndex], this.editedItem)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+
         } else {
-          this.desserts.push(this.editedItem)
+
+        this.axios.post('/funcionario/', {
+          name: this.editedItem.name,
+          surname: this.editedItem.surname,
+          role: this.editedItem.role,
+          address:{
+            cep: this.editedItem.address.cep,
+            bairro: this.editedItem.address.bairro,
+            localidade: this.editedItem.address.localidade,
+            uf: this.editedItem.address.uf
+          }
+        })
+        .then(response => { 
+          this.employeeItems.push(response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+          
         }
         this.close()
       }
