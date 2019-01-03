@@ -36,18 +36,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-menu bottom left>
-        <v-btn slot="activator" dark icon  >
-          <v-avatar size="32px" tile>
-            <img src="https://image.flaticon.com/icons/png/512/17/17004.png" alt="Vuetify">
-          </v-avatar>
-        </v-btn>
-        <v-list>
-          <v-list-tile v-for="(item, i) in headerMenu" :key="i" @click="logout(item.title)">
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+     
 
 
     </v-toolbar>
@@ -70,19 +59,19 @@
         items: [
           {
             icon: 'home',
-            title: 'Dashboard',
+            title: 'Documentação',
             to: '/'
           },
           {
             icon: 'move_to_inbox',
-            title: 'Employee',
+            title: 'Funcionários',
             to: 'funcionario-list'
           }
         ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Fundo Estadual de Recursos Hídricos',
+        title: 'Desafio Onyo',
         headerMenu: [{title: 'Sair'}]
       }
     },
