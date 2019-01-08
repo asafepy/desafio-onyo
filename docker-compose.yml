@@ -1,0 +1,39 @@
+version: '2.4'
+services:
+  
+  db:
+    image: postgres:10.1-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  funcionarios:
+    build: ./funcionarios
+    command: gunicorn -c gunicorn.conf funcionarios.wsgi
+    volumes:
+      - ./funcionarios:/funcionarios
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  microservice_cep:
+    build:
+      context: ./microservice_cep
+    volumes:
+      - ./microservice_cep:/microservice_cep
+    expose:
+      - 5000
+    ports:
+      - 5000:5000
+
+  nginx:
+    build: docker/nginx
+    depends_on:
+      - funcionarios
+      - microservice_cep
+    command: nginx -g "daemon off;"
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
