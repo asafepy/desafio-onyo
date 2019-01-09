@@ -1,17 +1,15 @@
-# Pull base image
-FROM python:3.7-slim
+FROM python:3.6
 
-# Set environment varibles
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
+ENV WEBAPP_DIR=/funcionarios
 
-# Set work directory
-WORKDIR /code
+ADD requirements.txt $WEBAPP_DIR/
 
-# Install dependencies
-RUN pip install pipenv
-COPY ./Pipfile /code/Pipfile
-RUN pipenv install --system --skip-lock
+RUN mkdir -p /var/log/gunicorn
 
-# Copy project
-COPY . /code/
+
+WORKDIR $WEBAPP_DIR
+
+RUN pip install -r requirements.txt
+
+ADD . $WEBAPP_DIR/

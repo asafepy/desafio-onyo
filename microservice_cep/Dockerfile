@@ -1,13 +1,13 @@
-FROM python:3.6
-EXPOSE 5000
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y python3-pip
+COPY . /microservice_cep
+WORKDIR /microservice_cep
+RUN pip3 install flask virtualenv Flask-RESTful==0.3.6 gunicorn==19.8.1
+RUN virtualenv --python=python3 venv
+ENV FLASK_APP=microservice_cep 
+ENV PLATAFORMA_SETTINGS=../settings.cfg 
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
-ENV PYTHONUNBUFFERED=1
-ENV WEBAPP_DIR=/base_c/base_c
-
-ADD requirements.txt $WEBAPP_DIR/
-
-ADD . $WEBAPP_DIR/
-WORKDIR $WEBAPP_DIR
-RUN pip install -r requirements.txt
-
-CMD ["gunicorn", "--bind=0.0.0.0:5000", "app:app"]
+CMD ["python3", "run.py"]

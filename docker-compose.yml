@@ -1,12 +1,19 @@
 version: '2.4'
 services:
-  
   db:
     image: postgres:10.1-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-
-  funcionarios:
+  www:
+    build: ./funcionarios_front
+    command: yarn install && npm run dev
+    volumes:
+      - .:/funcionarios_front
+    ports:
+      - '9000:9000'
+    depends_on:
+      - api
+  api:
     build: ./funcionarios
     command: gunicorn -c gunicorn.conf funcionarios.wsgi
     volumes:
@@ -15,8 +22,8 @@ services:
       - 8000:8000
     depends_on:
       - db
-
-  microservice_cep:
+      - cep
+  cep:
     build:
       context: ./microservice_cep
     volumes:
@@ -25,15 +32,14 @@ services:
       - 5000
     ports:
       - 5000:5000
-
   nginx:
     build: docker/nginx
     depends_on:
-      - funcionarios
-      - microservice_cep
+      - www
+      - api
+      - cep
     command: nginx -g "daemon off;"
     ports:
       - "80:80"
-
 volumes:
   postgres_data:
