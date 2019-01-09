@@ -101,14 +101,14 @@ WSGI_APPLICATION = 'funcionarios.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'root',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'onyo',
         'USER': 'root',
-        'HOST': 'onyo', # set in docker-compose.yml
-        'PORT': 5432 # default postgres port
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
